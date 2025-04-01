@@ -1,26 +1,19 @@
 import logo from "../assets/logo.svg";
+import HeaderNavBarButton from "./HeaderNavBarButton";
 
 function Header() {
   return (
-    <div className="w-screen bg-amber-300 h-16 py-3 px-5 flex flex-row">
-      <div className="w-4/8">
+    <div className="w-screen bg-amber-300 h-16 py-4 px-5 flex flex-row align-middle">
+      <div className="w-5/8">
         <img src={logo} alt="logo" className="h-10" />
       </div>
-      <div className="w-4/8 flex flex-row justify-between items-center">
-        <a
-          href="Profile"
-          className="text-2xl text-indigo-900 font-poppins mx-5"
-        >
-          Profile
-        </a>
-        <a href="Find" className="text-2xl text-indigo-900 font-poppins mx-5">
-          Find a Party
-        </a>
-        <a href="Throw" className="text-2xl text-indigo-900 font-poppins mx-5">
-          Throw a party
-        </a>
+      <div className="w-3/8 flex flex-row justify-between">
+        <HeaderNavBarButton href="Profile">Profile</HeaderNavBarButton>
+        <HeaderNavBarButton href="Find">Find a Party</HeaderNavBarButton>
+        <HeaderNavBarButton href="Throw">Throw a party</HeaderNavBarButton>
       </div>
     </div>
   );
 }
+
 export default Header;

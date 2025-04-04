@@ -1,8 +1,8 @@
 import { useState } from "react";
-import logo from "../assets/logo.svg";
+import { Link } from "react-router-dom";
 import HeaderNavBarButton from "./HeaderNavBarButton";
 
-function Header() {
+function Header({ logo }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -14,7 +14,9 @@ function Header() {
       className={`w-full h-16 px-5 flex items-center justify-between bg-amber-300`}
     >
       <div className="flex items-center">
-        <img src={logo} alt="logo" className="h-10" />
+        <Link to="/">
+          <img src={logo} alt="logo" className="h-10" />
+        </Link>
       </div>
       <div className="md:hidden ">
         <button onClick={toggleMenu}>
@@ -43,17 +45,23 @@ function Header() {
         </button>
       </div>
       <nav className="hidden md:flex space-x-4">
-        <HeaderNavBarButton href="Profile">Profile</HeaderNavBarButton>
-        <HeaderNavBarButton href="Find">Find a Party</HeaderNavBarButton>
-        <HeaderNavBarButton href="Throw">Throw a party</HeaderNavBarButton>
+        <HeaderNavBarButton href="/profile">Profile</HeaderNavBarButton>
+        <HeaderNavBarButton href="/findAParty">Find a Party</HeaderNavBarButton>
+        <HeaderNavBarButton href="/throwAParty">
+          Throw a party
+        </HeaderNavBarButton>
       </nav>
       {isOpen && (
         <div
           className={`absolute top-16 left-0 w-full bg-amber-300 flex flex-col items-center space-y-4 py-4 md:hidden z-50 transition-all duration-300`}
         >
-          <HeaderNavBarButton href="Profile">Profile</HeaderNavBarButton>
-          <HeaderNavBarButton href="Find">Find a Party</HeaderNavBarButton>
-          <HeaderNavBarButton href="Throw">Throw a party</HeaderNavBarButton>
+          <HeaderNavBarButton href="/profile">Profile</HeaderNavBarButton>
+          <HeaderNavBarButton href="/findAParty">
+            Find a Party
+          </HeaderNavBarButton>
+          <HeaderNavBarButton href="/throwAParty">
+            Throw a party
+          </HeaderNavBarButton>
         </div>
       )}
     </header>

@@ -28,7 +28,6 @@ function FindAPartyShowMore() {
       <h2 className="text-center mb-2">
         Party Date: {dateFormat("dd.mm.yyyy", day, month, year)}
       </h2>
-      <h2 className="text-center mb-2">Age Limit: {party.age_limit}+</h2>
       <h2 className="text-center mb-2">
         Ticket Price: {party.ticket_price} {party.currency}
       </h2>
@@ -38,14 +37,14 @@ function FindAPartyShowMore() {
             Total Tables: {party.table_count}
           </h2>
           <h2 className="text-center mb-2">
-            Tables Reserved: {party.tables_reserved}
+            Remaining tables: {party.table_count - party.tables_reserved}
           </h2>
         </>
       ) : (
         <>
           <h2 className="text-center mb-2">Capacity: {party.capacity}</h2>
           <h2 className="text-center mb-2">
-            People Signed Up: {party.people_signed_up}
+            Remaining spots: {party.capacity - party.people_signed_up}
           </h2>
         </>
       )}

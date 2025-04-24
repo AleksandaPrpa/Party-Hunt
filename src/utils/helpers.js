@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 export function dateFormat(format, day, month, year) {
   switch (format) {
     case "dd-mm-yyyy":
@@ -35,4 +36,17 @@ function getMonthName(month) {
     "December",
   ];
   return months[parseInt(month, 10) - 1] || "Invalid Month";
+}
+
+export function useWindowWidth() {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return width;
 }

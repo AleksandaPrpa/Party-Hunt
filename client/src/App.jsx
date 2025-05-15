@@ -7,6 +7,7 @@ import ThrowAParty from "./Pages/ThrowAParty";
 import FindAPartyShowMore from "./Pages/FindAPartyShowMore";
 import Home from "./Pages/Home";
 import logo from "./assets/logo.svg";
+import Reservation from "./Pages/Reservation";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,12 @@ const router = createBrowserRouter([
       {
         path: "/findAParty/:id",
         element: <FindAPartyShowMore />,
+        //loader: loader,
+        errorElement: <Error />,
+      },
+      {
+        path: "/findAParty/:id/reservation",
+        element: <Reservation />,
         //loader: loader,
         errorElement: <Error />,
       },

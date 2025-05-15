@@ -97,9 +97,9 @@ function FindAPartyShowMore() {
         <h2 className="text-center">VIP Conditions: {party.vip_conditions}</h2>
         <h2 className="text-center">Phone Number: {party.phone_number}</h2>
 
-        <Button>
+        <LinkButton to={`/findAParty/${party._id}/reservation`}>
           {party.type === "Club" ? `Lock Your Table` : `Secure Your Spot`}
-        </Button>
+        </LinkButton>
         <LinkButton to={-1}>Show Less</LinkButton>
       </div>
 

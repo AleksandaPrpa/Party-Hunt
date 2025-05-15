@@ -11,7 +11,9 @@ router.get("/", async (req, res) => {
     const parties = await collection.find({}).toArray();
     res.json(parties);
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch parties", details: err });
+    res
+      .status(500)
+      .json({ error: "Failed to fetch parties", details: err.message });
   }
 });
 
@@ -27,7 +29,9 @@ router.get("/:id", async (req, res) => {
 
     res.json(party);
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch party", details: err });
+    res
+      .status(500)
+      .json({ error: "Failed to fetch party", details: err.message });
   }
 });
 
@@ -39,7 +43,9 @@ router.post("/", async (req, res) => {
     const result = await collection.insertOne(newParty);
     res.status(201).json({ insertedId: result.insertedId });
   } catch (err) {
-    res.status(500).json({ error: "Failed to create party", details: err });
+    res
+      .status(500)
+      .json({ error: "Failed to create party", details: err.message });
   }
 });
 
@@ -59,7 +65,9 @@ router.put("/:id", async (req, res) => {
 
     res.json({ message: "Party updated successfully" });
   } catch (err) {
-    res.status(500).json({ error: "Failed to update party", details: err });
+    res
+      .status(500)
+      .json({ error: "Failed to update party", details: err.message });
   }
 });
 
@@ -77,7 +85,9 @@ router.delete("/:id", async (req, res) => {
 
     res.json({ message: "Party deleted successfully" });
   } catch (err) {
-    res.status(500).json({ error: "Failed to delete party", details: err });
+    res
+      .status(500)
+      .json({ error: "Failed to delete party", details: err.message });
   }
 });
 

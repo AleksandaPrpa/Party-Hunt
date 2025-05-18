@@ -13,3 +13,27 @@
 body {
   margin: 0;
 }
+.react-datepicker {
+  @apply bg-white border border-stone-300 rounded-lg shadow-lg;
+}
+
+.react-datepicker__header {
+  @apply bg-amber-300 text-stone-800 border-b border-stone-300;
+}
+
+.react-datepicker__day {
+  @apply text-stone-700 hover:bg-amber-100 rounded-md;
+}
+
+.react-datepicker__day--selected {
+  @apply bg-amber-400 text-white font-semibold;
+}
+
+.react-datepicker__day--keyboard-selected {
+  @apply bg-amber-300;
+}
+
+.react-datepicker__current-month,
+.react-datepicker__day-name {
+  @apply font-bold text-stone-800;
+}

@@ -8,7 +8,7 @@ function Footer() {
     <footer className="bg-amber-300 py-6 ">
       <div className="container mx-auto text-center">
         <p className="text-xl text-indigo-900">
-          © {currentYear} Your Company. All rights reserved.
+          © {currentYear} Aleksandar Prpa. All rights reserved.
         </p>
         <div className="mt-4 flex justify-center space-x-6">
           <a

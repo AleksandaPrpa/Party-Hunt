@@ -180,6 +180,12 @@ function Reservation() {
       >
         Submit reservation
       </button>
+      <button
+        className="block mx-auto cursor-pointer select-none rounded-lg bg-amber-300 py-3 px-6 text-center align-middle font-sans text-lg font-bold uppercase text-stone-700 shadow-md shadow-amber-300/20 transition-all hover:shadow-amber-300/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+        onClick={() => navigate(-1)}
+      >
+        Go back
+      </button>
     </form>
   );
 }

@@ -6,9 +6,13 @@ import "react-datepicker/dist/react-datepicker.css";
 
 function ThrowAParty() {
   const navigate = useNavigate();
+  const loggedInUser =
+    JSON.parse(localStorage.getItem("loggedInUser")) ||
+    JSON.parse(sessionStorage.getItem("loggedInUser"));
 
   const [formData, setFormData] = useState({
-    username: "",
+    username: loggedInUser.username,
+    user_id: loggedInUser._id,
     name: "",
     ticket_price: 0,
     currency: "RSD",
@@ -98,45 +102,113 @@ function ThrowAParty() {
           Throw A Party
         </h2>
 
-        {[
-          ["name", "Party Name"],
-          ["ticket_price", "Ticket Price (e.g. 1500)"],
-          ["theme", "Theme (e.g. Disco Night)"],
-          ["location", "Location (Street/Area)"],
-          ["city", "City"],
-          ["phone_number", "Phone Number"],
-          ["vip_conditions", "VIP Conditions (optional)"],
-        ].map(([name, label]) => (
-          <div key={name}>
-            <label className="text-stone-700 font-medium block mb-1">
-              {label}
-            </label>
-            <input
-              type="text"
-              name={name}
-              value={formData[name]}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border rounded-lg text-black"
-            />
-          </div>
-        ))}
+        <div>
+          <label className="text-stone-700 font-medium block mb-1">
+            Party Name
+          </label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            className="w-full p-2 border rounded-lg text-black"
+          />
+        </div>
 
         <div>
           <label className="text-stone-700 font-medium block mb-1">
-            Currency
+            Ticket Price
           </label>
-          <select
-            name="currency"
-            value={formData.currency}
+          <input
+            type="number"
+            name="ticket_price"
+            value={formData.ticket_price}
+            onChange={handleChange}
+            required
+            className="w-full p-2 border rounded-lg text-black"
+          />
+          <div className="mt-2">
+            <label className="text-stone-700 font-medium block mb-1">
+              Currency
+            </label>
+            <select
+              name="currency"
+              value={formData.currency}
+              onChange={handleChange}
+              className="w-full p-2 border rounded-lg text-black"
+              required
+            >
+              <option value="RSD">RSD</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label className="text-stone-700 font-medium block mb-1">Theme</label>
+          <input
+            type="text"
+            name="theme"
+            value={formData.theme}
+            onChange={handleChange}
+            required
+            className="w-full p-2 border rounded-lg text-black"
+          />
+        </div>
+
+        <div>
+          <label className="text-stone-700 font-medium block mb-1">
+            Location (Street/Area)
+          </label>
+          <input
+            type="text"
+            name="location"
+            value={formData.location}
+            onChange={handleChange}
+            required
+            className="w-full p-2 border rounded-lg text-black"
+          />
+        </div>
+
+        <div>
+          <label className="text-stone-700 font-medium block mb-1">City</label>
+          <input
+            type="text"
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            required
+            className="w-full p-2 border rounded-lg text-black"
+          />
+        </div>
+
+        <div>
+          <label className="text-stone-700 font-medium block mb-1">
+            Phone Number
+          </label>
+          <input
+            type="text"
+            name="phone_number"
+            value={formData.phone_number}
+            onChange={handleChange}
+            required
+            className="w-full p-2 border rounded-lg text-black"
+          />
+        </div>
+
+        <div>
+          <label className="text-stone-700 font-medium block mb-1">
+            VIP Conditions (optional)
+          </label>
+          <input
+            type="text"
+            name="vip_conditions"
+            value={formData.vip_conditions}
             onChange={handleChange}
             className="w-full p-2 border rounded-lg text-black"
-            required
-          >
-            <option value="RSD">RSD</option>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-          </select>
+          />
         </div>
 
         <div>
@@ -263,8 +335,9 @@ function ThrowAParty() {
           Create Party
         </button>
         <button
-          className="w-full bg-amber-300 text-stone-800 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-amber-400 transition"
+          type="button"
           onClick={() => navigate(-1)}
+          className="w-full bg-amber-300 text-stone-800 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-amber-400 transition"
         >
           Go back
         </button>

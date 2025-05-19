@@ -8,12 +8,12 @@ import FindAPartyShowMore from "./Pages/FindAPartyShowMore";
 import Home from "./Pages/Home";
 import logo from "./assets/logo.svg";
 import Reservation from "./Pages/Reservation";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
     element: <AppLayout logo={logo} />,
     errorElement: <Error />,
-
     children: [
       {
         path: "/",
@@ -21,26 +21,46 @@ const router = createBrowserRouter([
       },
       {
         path: "/profile",
-        element: <Profile />,
-        //loader: loader,
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
         errorElement: <Error />,
       },
-      { path: "/findAParty", element: <FindAParty /> },
+      {
+        path: "/findAParty",
+        element: (
+          <ProtectedRoute>
+            <FindAParty />
+          </ProtectedRoute>
+        ),
+      },
       {
         path: "/findAParty/:id",
-        element: <FindAPartyShowMore />,
-        //loader: loader,
+        element: (
+          <ProtectedRoute>
+            <FindAPartyShowMore />
+          </ProtectedRoute>
+        ),
         errorElement: <Error />,
       },
       {
         path: "/findAParty/:id/reservation",
-        element: <Reservation />,
-        //loader: loader,
+        element: (
+          <ProtectedRoute>
+            <Reservation />
+          </ProtectedRoute>
+        ),
         errorElement: <Error />,
       },
       {
         path: "/throwAParty",
-        element: <ThrowAParty />,
+        element: (
+          <ProtectedRoute>
+            <ThrowAParty />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

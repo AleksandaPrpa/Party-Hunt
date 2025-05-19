@@ -34,7 +34,6 @@ router.get("/:id", async (req, res) => {
       .json({ error: "Failed to fetch party", details: err.message });
   }
 });
-
 // CREATE a new party
 router.post("/", async (req, res) => {
   try {

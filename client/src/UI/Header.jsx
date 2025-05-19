@@ -1,55 +1,69 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom"; // ⬅️ dodaj useLocation
+import { Link } from "react-router-dom";
 import HeaderNavBarButton from "./HeaderNavBarButton";
+import { useWindowWidth } from "../utils/helpers";
 
 function Header({ logo }) {
   const [isOpen, setIsOpen] = useState(false);
-  const { pathname } = useLocation(); // ⬅️ dobavi trenutnu rutu
+  const width = useWindowWidth();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+  if (width < 768) {
+    return (
+      <>
+        <header className="w-full h-16 px-5 flex items-center justify-between bg-amber-300">
+          {/* Logo i hamburger */}
+          <div className="flex items-center justify-between w-full max-w-screen-xl mx-auto">
+            <Link to="/">
+              <img src={logo} alt="logo" className="h-10" />
+            </Link>
 
-  const hideNavLinks = pathname === "/"; // ⬅️ proveri da li si na `/`
+            {/* Hamburger (mobile only) */}
+            <div className="md:hidden">
+              <button onClick={toggleMenu} aria-label="Toggle menu">
+                <svg
+                  className="w-8 h-8 text-indigo-900 cursor-pointer"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  {isOpen ? (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  ) : (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  )}
+                </svg>
+              </button>
+            </div>
 
-  return (
-    <header className="w-full h-16 px-5 flex items-center justify-between bg-amber-300">
-      <div className="flex items-center">
-        <Link to="/">
-          <img src={logo} alt="logo" className="h-10" />
-        </Link>
-      </div>
-
-      {!hideNavLinks && (
-        <>
-          <div className="md:hidden">
-            <button onClick={toggleMenu}>
-              <svg
-                className="w-8 h-8 text-indigo-900 cursor-pointer"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                {isOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                )}
-              </svg>
-            </button>
+            {/* Desktop nav */}
+            <nav className="hidden md:flex space-x-6">
+              <HeaderNavBarButton href="/profile">Profile</HeaderNavBarButton>
+              <HeaderNavBarButton href="/findAParty">
+                Find a Party
+              </HeaderNavBarButton>
+              <HeaderNavBarButton href="/throwAParty">
+                Throw a party
+              </HeaderNavBarButton>
+            </nav>
           </div>
+        </header>
 
-          <nav className="hidden md:flex space-x-4">
+        {/* Mobile menu - izvan headera */}
+        {isOpen && (
+          <nav className="w-full bg-amber-300 flex flex-col items-center space-y-4 py-4 md:hidden max-w-screen-xl mx-auto">
             <HeaderNavBarButton href="/profile">Profile</HeaderNavBarButton>
             <HeaderNavBarButton href="/findAParty">
               Find a Party
@@ -58,22 +72,70 @@ function Header({ logo }) {
               Throw a party
             </HeaderNavBarButton>
           </nav>
-
-          {isOpen && (
-            <div className="absolute top-16 left-0 w-full bg-amber-300 flex flex-col items-center space-y-4 py-4 md:hidden z-50 transition-all duration-300">
-              <HeaderNavBarButton href="/profile">Profile</HeaderNavBarButton>
-              <HeaderNavBarButton href="/findAParty">
-                Find a Party
-              </HeaderNavBarButton>
-              <HeaderNavBarButton href="/throwAParty">
-                Throw a party
-              </HeaderNavBarButton>
-            </div>
-          )}
-        </>
-      )}
-    </header>
-  );
+        )}
+      </>
+    );
+  } else {
+    return (
+      <header
+        className={`w-full h-16 px-5 flex items-center justify-between bg-amber-300`}
+      >
+        <div className="flex items-center">
+          <Link to="/">
+            <img src={logo} alt="logo" className="h-10" />
+          </Link>
+        </div>
+        <div className="md:hidden ">
+          <button onClick={toggleMenu}>
+            <svg
+              className="w-8 h-8 text-indigo-900  cursor-pointer"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              {isOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
+            </svg>
+          </button>
+        </div>
+        <nav className="hidden md:flex space-x-4">
+          <HeaderNavBarButton href="/profile">Profile</HeaderNavBarButton>
+          <HeaderNavBarButton href="/findAParty">
+            Find a Party
+          </HeaderNavBarButton>
+          <HeaderNavBarButton href="/throwAParty">
+            Throw a party
+          </HeaderNavBarButton>
+        </nav>
+        {isOpen && (
+          <div
+            className={`absolute top-16 left-0 w-full bg-amber-300 flex flex-col items-center space-y-4 py-4 md:hidden z-50 transition-all duration-300`}
+          >
+            <HeaderNavBarButton href="/profile">Profile</HeaderNavBarButton>
+            <HeaderNavBarButton href="/findAParty">
+              Find a Party
+            </HeaderNavBarButton>
+            <HeaderNavBarButton href="/throwAParty">
+              Throw a party
+            </HeaderNavBarButton>
+          </div>
+        )}
+      </header>
+    );
+  }
 }
 
 export default Header;

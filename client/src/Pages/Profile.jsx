@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { getPartiesByUser_Id } from "../utils/helpers";
 import ProfilePartyListItem from "./ProfilePartyListItem";
+import ProfileEdit from "./ProfileEdit";
 
 function Profile() {
   const [user, setUser] = useState(null);
   const [parties, setParties] = useState([]);
-  const navigate = useNavigate();
+  const [isEditModeOpen, setIsEditModeOpen] = useState(false);
 
   useEffect(() => {
     const loggedInUser =
@@ -30,11 +30,14 @@ function Profile() {
         <h1 className="text-2xl font-bold uppercase text-stone-800">
           {user.username}
         </h1>
+        {isEditModeOpen && (
+          <ProfileEdit setIsEditModeOpen={setIsEditModeOpen} />
+        )}
         <button
           className="bg-amber-300 text-stone-800 font-semibold py-2 px-4 rounded-lg shadow hover:bg-amber-400 transition cursor-pointer"
-          onClick={() => navigate(`/profile/${user._id}`)}
+          onClick={() => setIsEditModeOpen(!isEditModeOpen)}
         >
-          Edit Profile
+          {isEditModeOpen ? "Close Edit Profile" : "Edit Profile"}
         </button>
       </div>
 

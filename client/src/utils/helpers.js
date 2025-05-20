@@ -64,3 +64,8 @@ export async function getPartiesByUser_Id(userId) {
     throw error;
   }
 }
+export async function getUserById(userId) {
+  const response = await fetch(`http://localhost:5050/users/${userId}`);
+  if (!response.ok) throw new Error("Failed to fetch user");
+  return response.json();
+}

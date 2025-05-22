@@ -1,7 +1,7 @@
 function Loader() {
   return (
-    <div className="absolute inset-0 flex items-center justify-center bg-slate-200/20 backdrop-blur-sm">
-      <div className="loader"></div>
+    <div className="flex items-center justify-center  backdrop-blur-sm z-50 p-4 rounded-lg">
+      <div className="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
     </div>
   );
 }

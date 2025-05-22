@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Pencil } from "lucide-react";
-import { getUserById } from "../utils/helpers";
+import { getUserById } from "../utils/fetch";
+import Loader from "../UI/Loader";
 
 function ProfileEdit({ setIsEditModeOpen }) {
   const [user, setUser] = useState(null);
@@ -53,22 +54,17 @@ function ProfileEdit({ setIsEditModeOpen }) {
 
   const handleSave = async () => {
     try {
-      const response = await fetch(`http://localhost:5050/users/${user._id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: formData.username,
-          email: formData.email,
-          phone_number: formData.phone_number,
-        }),
-      });
+      const updatedData = {
+        username: formData.username,
+        email: formData.email,
+        phone_number: formData.phone_number,
+      };
 
-      if (!response.ok) {
-        throw new Error("Failed to update user");
-      }
+      await updatedData(user._id, updatedData);
 
       const updatedUser = await getUserById(user._id);
       setUser(updatedUser);
+
       setEditableFields({
         username: false,
         email: false,
@@ -80,7 +76,7 @@ function ProfileEdit({ setIsEditModeOpen }) {
     }
   };
 
-  if (!user) return <div>Loading...</div>;
+  if (!user) return <Loader />;
 
   const fields = [
     { label: "Username", key: "username" },
@@ -97,26 +93,27 @@ function ProfileEdit({ setIsEditModeOpen }) {
             value={formData[field.key]}
             disabled={!editableFields[field.key]}
             onChange={(e) => handleChange(field.key, e.target.value)}
-            className={`flex-grow border px-2 py-1 text-sm text-stone-700 rounded
-              ${
-                editableFields[field.key]
-                  ? "bg-white border-amber-300"
-                  : "bg-gray-100 border-gray-300"
-              }`}
+            className={`flex-grow border px-3 py-2 text-sm rounded font-medium
+          ${
+            editableFields[field.key]
+              ? "bg-slate-900 border-cyan-500 text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              : "bg-slate-900 border-teal-400 text-slate-500 cursor-not-allowed"
+          } transition-colors duration-200 ease-in-out`}
+            placeholder={`Enter ${field.label || field.key}`}
           />
           <Pencil
-            className="text-gray-500 hover:text-amber-400 cursor-pointer"
-            size={16}
+            className="text-teal-400 hover:text-pink-500 cursor-pointer transition-colors duration-200"
+            size={18}
             onClick={() => enableEdit(field.key)}
           />
         </div>
       ))}
 
       {hasChanges() && (
-        <div className="pt-2">
+        <div className="pt-2 flex justify-center">
           <button
             onClick={handleSave}
-            className="bg-amber-300 text-stone-800 font-semibold py-2 px-4 rounded-lg shadow hover:bg-amber-400 transition"
+            className="bg-cyan-500 text-slate-100 font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-pink-500 cursor-pointer transition duration-300"
           >
             Save changes
           </button>

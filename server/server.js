@@ -5,6 +5,7 @@ import partyRouter from "./routes/party.js";
 import usersRouter from "./routes/users.js";
 
 dotenv.config({ path: "./config.env" });
+
 const app = express();
 const PORT = process.env.PORT || 5050;
 
@@ -14,6 +15,6 @@ app.use(express.json());
 app.use("/party", partyRouter);
 app.use("/users", usersRouter);
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });

@@ -1,9 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Button from "../UI/Button";
 import LinkButton from "../UI/LinkButton";
 import AgeLimitBadge from "../UI/AgeLimitBadge";
 import { dateFormat, useWindowWidth } from "../utils/helpers";
+import Loader from "../UI/Loader";
+import { getPartiesByUser_Id } from "../utils/fetch";
 
 function FindAPartyShowMore() {
   const { id } = useParams();
@@ -11,37 +12,35 @@ function FindAPartyShowMore() {
   const [party, setParty] = useState(null);
 
   useEffect(() => {
-    async function fetchParty() {
+    async function fetchData() {
       try {
-        const response = await fetch(`http://localhost:5050/party/${id}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
+        const data = await getPartiesByUser_Id(id);
         setParty(data);
       } catch (error) {
         console.error("Error fetching party:", error);
       }
     }
 
-    fetchParty();
+    if (id) {
+      fetchData();
+    }
   }, [id]);
 
-  if (!party) return <div className="text-center text-2xl p-8">Loading...</div>;
+  if (!party) return <Loader />;
 
   const [year, month, day] = party.party_date.split("-");
 
   return (
-    <div className="md:grid md:grid-rows-4 md:grid-cols-2 md:gap-4 md:mt-[-5vh] w-full min-h-screen h-auto flex flex-col md:flex-none items-center p-4 text-2xl bg-orange-50 text-stone-700">
+    <div className="md:grid md:grid-rows-4 md:grid-cols-2 md:gap-4 md:mt-[-5vh] w-full min-h-screen h-auto flex flex-col md:flex-none items-center p-4 text-2xl bg-slate-900 text-slate-100">
       <div className="md:col-span-2 md:row-start-1 md:mb-0 w-full flex justify-start items-center gap-4 mb-4 px-4">
-        <h2 className="text-4xl text-stone-900 font-bold">{party.name}</h2>
+        <h2 className="text-4xl font-bold text-slate-100">{party.name}</h2>
         <AgeLimitBadge
-          className="flex items-center justify-center w-10 h-10 bg-stone-900 text-white rounded-full text-sm font-semibold"
+          className="flex items-center justify-center w-10 h-10 bg-cyan-500 text-white rounded-full text-sm font-semibold"
           age_limit={party.age_limit}
         />
       </div>
 
-      <div className="md:col-start-1 md:row-start-2 md:row-span-4 md:px-10 flex flex-col items-center w-full gap-2">
+      <div className="md:col-start-1 md:row-start-2 md:row-span-4 md:px-10 flex flex-col items-center w-full gap-3">
         <h2 className="text-center">Theme: {party.theme}</h2>
         <h2 className="text-center">Type: {party.type}</h2>
         <h2 className="text-center">
@@ -75,14 +74,13 @@ function FindAPartyShowMore() {
             <h2 className="text-center mb-2">
               Location: {party.location + ", " + party.city}
             </h2>
-
             <div className="my-5 w-full flex justify-center">
               <iframe
                 title={party.location + ", " + party.city}
                 width="auto"
                 height="auto"
                 style={{ border: 0 }}
-                loading="lazy"
+                loading={<Loader />}
                 allowFullScreen
                 referrerPolicy="no-referrer-when-downgrade"
                 src={`https://www.google.com/maps?q=${encodeURIComponent(
@@ -97,10 +95,15 @@ function FindAPartyShowMore() {
         <h2 className="text-center">VIP Conditions: {party.vip_conditions}</h2>
         <h2 className="text-center">Phone Number: {party.phone_number}</h2>
 
-        <LinkButton to={`/findAParty/${party._id}/reservation`}>
+        <LinkButton
+          to={`/findAParty/${party._id}/reservation`}
+          isPadding={true}
+        >
           {party.type === "Club" ? `Lock Your Table` : `Secure Your Spot`}
         </LinkButton>
-        <LinkButton to={-1}>Show Less</LinkButton>
+        <LinkButton to={-1} isPadding={true}>
+          Show Less
+        </LinkButton>
       </div>
 
       {width >= 768 && (
@@ -113,7 +116,7 @@ function FindAPartyShowMore() {
               title={party.location + ", " + party.city}
               className="w-full h-full md:rounded-2xl md:shadow-lg"
               style={{ border: 0 }}
-              loading="lazy"
+              loading={<Loader />}
               allowFullScreen
               referrerPolicy="no-referrer-when-downgrade"
               src={`https://www.google.com/maps?q=${encodeURIComponent(

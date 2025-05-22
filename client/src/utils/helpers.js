@@ -50,22 +50,3 @@ export function useWindowWidth() {
 
   return width;
 }
-export async function getPartiesByUser_Id(userId) {
-  try {
-    const res = await fetch("http://localhost:5050/party");
-    if (!res.ok) throw new Error("Failed to fetch parties");
-
-    const allParties = await res.json();
-    const userParties = allParties.filter((party) => party.user_id === userId);
-
-    return userParties;
-  } catch (error) {
-    console.error("Error in getPartiesByUser_Id:", error);
-    throw error;
-  }
-}
-export async function getUserById(userId) {
-  const response = await fetch(`http://localhost:5050/users/${userId}`);
-  if (!response.ok) throw new Error("Failed to fetch user");
-  return response.json();
-}

@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import HeaderNavBarButton from "./HeaderNavBarButton";
 import { useWindowWidth } from "../utils/helpers";
+import Logo from "../assets/Logo";
 
-function Header({ logo }) {
+function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const width = useWindowWidth();
 
@@ -13,18 +14,18 @@ function Header({ logo }) {
   if (width < 768) {
     return (
       <>
-        <header className="w-full h-16 px-5 flex items-center justify-between bg-amber-300">
+        <header className="w-full h-16 px-5 flex items-center justify-between bg-slate-700">
           {/* Logo i hamburger */}
           <div className="flex items-center justify-between w-full max-w-screen-xl mx-auto">
             <Link to="/">
-              <img src={logo} alt="logo" className="h-10" />
+              <Logo />
             </Link>
 
             {/* Hamburger (mobile only) */}
             <div className="md:hidden">
               <button onClick={toggleMenu} aria-label="Toggle menu">
                 <svg
-                  className="w-8 h-8 text-indigo-900 cursor-pointer"
+                  className="w-8 h-8 text-cyan-400 cursor-pointer"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -50,26 +51,29 @@ function Header({ logo }) {
 
             {/* Desktop nav */}
             <nav className="hidden md:flex space-x-6">
-              <HeaderNavBarButton href="/profile">Profile</HeaderNavBarButton>
-              <HeaderNavBarButton href="/findAParty">
+              <HeaderNavBarButton setIsOpen={setIsOpen} href="/profile">
+                Profile
+              </HeaderNavBarButton>
+              <HeaderNavBarButton setIsOpen={setIsOpen} href="/findAParty">
                 Find a Party
               </HeaderNavBarButton>
-              <HeaderNavBarButton href="/throwAParty">
-                Throw a party
+              <HeaderNavBarButton setIsOpen={setIsOpen} href="/throwAParty">
+                Throw a Party
               </HeaderNavBarButton>
             </nav>
           </div>
         </header>
 
-        {/* Mobile menu - izvan headera */}
         {isOpen && (
-          <nav className="w-full bg-amber-300 flex flex-col items-center space-y-4 py-4 md:hidden max-w-screen-xl mx-auto">
-            <HeaderNavBarButton href="/profile">Profile</HeaderNavBarButton>
-            <HeaderNavBarButton href="/findAParty">
+          <nav className="w-full bg-slate-700 flex flex-col items-center space-y-4 py-4 md:hidden max-w-screen-xl mx-auto">
+            <HeaderNavBarButton setIsOpen={setIsOpen} href="/profile">
+              Profile
+            </HeaderNavBarButton>
+            <HeaderNavBarButton setIsOpen={setIsOpen} href="/findAParty">
               Find a Party
             </HeaderNavBarButton>
-            <HeaderNavBarButton href="/throwAParty">
-              Throw a party
+            <HeaderNavBarButton setIsOpen={setIsOpen} href="/throwAParty">
+              Throw a Party
             </HeaderNavBarButton>
           </nav>
         )}
@@ -77,18 +81,18 @@ function Header({ logo }) {
     );
   } else {
     return (
-      <header
-        className={`w-full h-16 px-5 flex items-center justify-between bg-amber-300`}
-      >
+      <header className="w-full h-16 px-5 flex items-center justify-between bg-slate-700">
         <div className="flex items-center">
           <Link to="/">
-            <img src={logo} alt="logo" className="h-10" />
+            <Logo />
           </Link>
         </div>
-        <div className="md:hidden ">
-          <button onClick={toggleMenu}>
+
+        {/* Hamburger menu for mobile */}
+        <div className="md:hidden">
+          <button onClick={toggleMenu} aria-label="Toggle menu">
             <svg
-              className="w-8 h-8 text-indigo-900  cursor-pointer"
+              className="w-8 h-8 text-cyan-400 cursor-pointer"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -111,24 +115,30 @@ function Header({ logo }) {
             </svg>
           </button>
         </div>
-        <nav className="hidden md:flex space-x-4">
-          <HeaderNavBarButton href="/profile">Profile</HeaderNavBarButton>
-          <HeaderNavBarButton href="/findAParty">
+
+        {/* Desktop nav */}
+        <nav className="hidden h-full md:flex space-x-4">
+          <HeaderNavBarButton setIsOpen={setIsOpen} href="/profile">
+            Profile
+          </HeaderNavBarButton>
+          <HeaderNavBarButton setIsOpen={setIsOpen} href="/findAParty">
             Find a Party
           </HeaderNavBarButton>
-          <HeaderNavBarButton href="/throwAParty">
+          <HeaderNavBarButton setIsOpen={setIsOpen} href="/throwAParty">
             Throw a party
           </HeaderNavBarButton>
         </nav>
+
+        {/* Mobile nav dropdown */}
         {isOpen && (
-          <div
-            className={`absolute top-16 left-0 w-full bg-amber-300 flex flex-col items-center space-y-4 py-4 md:hidden z-50 transition-all duration-300`}
-          >
-            <HeaderNavBarButton href="/profile">Profile</HeaderNavBarButton>
-            <HeaderNavBarButton href="/findAParty">
+          <div className="absolute top-16 left-0 w-full bg-slate-700 flex flex-col items-center space-y-4 py-4 md:hidden z-50 transition-all duration-300">
+            <HeaderNavBarButton setIsOpen={setIsOpen} href="/profile">
+              Profile
+            </HeaderNavBarButton>
+            <HeaderNavBarButton setIsOpen={setIsOpen} href="/findAParty">
               Find a Party
             </HeaderNavBarButton>
-            <HeaderNavBarButton href="/throwAParty">
+            <HeaderNavBarButton setIsOpen={setIsOpen} href="/throwAParty">
               Throw a party
             </HeaderNavBarButton>
           </div>

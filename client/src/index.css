@@ -13,27 +13,71 @@
 body {
   margin: 0;
 }
-.react-datepicker {
-  @apply bg-white border border-stone-300 rounded-lg shadow-lg;
+/* Osnovni tamni stil za kalendar */
+.custom-datepicker {
+  background-color: #0f172a; /* Tailwind slate-900 */
+  color: #e0e7ff; /* Tailwind slate-100 */
+  border-radius: 0.75rem; /* rounded-lg */
+  border: 1px solid #38b2ac; /* Tailwind teal-400 */
+  box-shadow: 0 10px 15px -3px rgba(56, 178, 172, 0.1),
+    0 4px 6px -2px rgba(56, 178, 172, 0.05); /* shadow-lg */
 }
 
-.react-datepicker__header {
-  @apply bg-amber-300 text-stone-800 border-b border-stone-300;
+/* Naslovi meseci, dana i t.d. */
+.custom-datepicker .react-datepicker__header {
+  background-color: #0f172a; /* slate-900 */
+  border-bottom: 1px solid #38b2ac; /* teal-400 */
+  color: white; /* slate-100 */
 }
 
-.react-datepicker__day {
-  @apply text-stone-700 hover:bg-amber-100 rounded-md;
+/* Naslovi dana u nedelji */
+.custom-datepicker .react-datepicker__day-name {
+  color: #94a3b8; /* tailwind slate-400 */
 }
 
-.react-datepicker__day--selected {
-  @apply bg-amber-400 text-white font-semibold;
+/* Dani */
+.custom-datepicker .react-datepicker__day {
+  color: #cbd5e1; /* tailwind slate-300 */
 }
 
-.react-datepicker__day--keyboard-selected {
-  @apply bg-amber-300;
+/* Hover efekat dana */
+.custom-datepicker .react-datepicker__day:hover {
+  background-color: #06b6d4; /* tailwind cyan-500 */
+  color: white;
+  border-radius: 0.375rem; /* rounded-md */
 }
 
-.react-datepicker__current-month,
-.react-datepicker__day-name {
-  @apply font-bold text-stone-800;
+/* Izabrani dan */
+.custom-datepicker .react-datepicker__day--selected,
+.custom-datepicker .react-datepicker__day--keyboard-selected {
+  background-color: #06b6d4; /* cyan-500 */
+  color: white;
+  border-radius: 0.375rem;
+}
+
+/* Dugmad za navigaciju (strelice) */
+.custom-datepicker .react-datepicker__navigation {
+  top: 12px;
+  border-color: #38b2ac; /* teal-400 */
+  opacity: 1;
+}
+
+/* Disabled dani */
+.custom-datepicker .react-datepicker__day--disabled {
+  color: #475569; /* slate-600 */
+  pointer-events: none;
+}
+.custom-datepicker .react-datepicker__header {
+  background-color: #0f172a; /* tamna pozadina slate-900 */
+  border-bottom: 1px solid #38b2ac; /* teal-400 */
+}
+
+.custom-datepicker .react-datepicker__current-month {
+  color: #e0e7ff; /* bela/tamno-plava */
+  font-weight: 600;
+}
+
+.custom-datepicker .react-datepicker__navigation {
+  border-color: #e0e7ff;
+  opacity: 1;
 }

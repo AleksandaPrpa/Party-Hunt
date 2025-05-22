@@ -3,6 +3,7 @@ import LinkButton from "../UI/LinkButton";
 
 function FindAPartyListItem({
   id,
+  color_id,
   name,
   ticket_price,
   currency,
@@ -17,9 +18,8 @@ function FindAPartyListItem({
 }) {
   const remainingTables = table_count - tables_reserved;
   const remainingSpots = capacity - people_signed_up;
-
   function setColor(i) {
-    return i % 2 ? "bg-orange-50 md:bg-orange-100" : "bg-orange-100";
+    return i % 2 ? "bg-slate-800 md:bg-slate-800" : "bg-slate-900";
   }
 
   function showCapacity(type) {
@@ -37,31 +37,78 @@ function FindAPartyListItem({
     }
   }
 
+  const noMoreSpace =
+    (type === "Club" && remainingTables <= 0) ||
+    (type !== "Club" && remainingSpots <= 0);
+
   return (
     <div
-      className={`md:w-80 md:my-10 md:rounded-2xl md:h-100 md:p-0 md:shadow-xl md:shadow-stone-400/40 w-screen h-auto p-4 text-2xl text-stone-700 ${setColor(
-        id
-      )} grid grid-rows-[auto_auto_auto_auto] grid-cols-1 gap-y-2`}
+      className={`md:w-80 cursor-default md:my-10 md:rounded-2xl md:h-auto md:p-0 md:shadow-xl md:shadow-black/20 w-full max-w-md h-auto p-0 text-2xl
+    ${
+      noMoreSpace
+        ? "text-slate-500 bg-slate-400 cursor-not-allowed select-none"
+        : ""
+    }
+    ${setColor(color_id)} 
+    grid grid-rows-[auto_auto_auto_auto] grid-cols-1 gap-y-4
+    transition duration-300 ease-in-out
+    hover:shadow-2xl hover:scale-[1.03]
+  `}
+      style={noMoreSpace ? { filter: "grayscale(70%)", opacity: 0.6 } : {}}
     >
-      <div className="md:h-25 md:rounded-t-2xl md:p-4 md:w-full md:bg-amber-300 flex justify-between items-center">
-        <h1 className="md:text-3xl md:w-6/8 self-start">{name}</h1>
+      <div
+        className={`md:h-28 md:rounded-t-2xl md:p-6 md:w-full w-screen p-3 flex justify-between items-center
+      bg-slate-600 shadow-md`}
+      >
+        <h1
+          className={`md:text-3xl md:w-6/8 self-start font-semibold
+        ${noMoreSpace ? "line-through text-slate-400" : "text-slate-100"}`}
+        >
+          {name}
+        </h1>
         <AgeLimitBadge
-          className={
-            "flex items-center justify-center w-8 h-8 bg-black text-white rounded-full text-sm font-semibold"
-          }
+          className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold cursor-default
+        ${noMoreSpace ? "bg-slate-700 text-white" : "bg-slate-700 text-white"}`}
           age_limit={age_limit}
         />
       </div>
 
-      <h2 className="justify-self-center">
+      <h2
+        className={`justify-self-center text-lg font-medium ${
+          noMoreSpace ? "line-through" : "text-slate-200"
+        }`}
+      >
         {ticket_price === 0
           ? `Ticket price: Free entry`
           : `Ticket price: ${ticket_price} ${currency}`}
       </h2>
-      <h2 className="justify-self-center">{showCapacity(type)}</h2>
-      <h2 className="justify-self-center">{location + ", " + city}</h2>
+      <h2
+        className={`justify-self-center text-lg font-medium ${
+          noMoreSpace ? "line-through" : "text-slate-200"
+        }`}
+      >
+        {showCapacity(type)}
+      </h2>
+      <h2
+        className={`justify-self-center text-lg font-medium ${
+          noMoreSpace ? "line-through" : "text-slate-200"
+        }`}
+      >
+        {location + ", " + city}
+      </h2>
 
-      <LinkButton to={`/findAParty/${id}`}>Show More</LinkButton>
+      {noMoreSpace ? (
+        <button
+          disabled
+          className="bg-slate-600 text-slate-400 cursor-not-allowed rounded-md py-3 px-6 w-full text-center font-semibold"
+        >
+          No More Space
+        </button>
+      ) : (
+        <LinkButton to={`/findAParty/${id}`} isWidth={true}>
+          Show More
+        </LinkButton>
+      )}
     </div>
   );
 }

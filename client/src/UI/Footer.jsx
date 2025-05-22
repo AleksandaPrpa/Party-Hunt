@@ -5,15 +5,15 @@ function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-amber-300 py-6 ">
+    <footer className="bg-slate-700 py-6">
       <div className="container mx-auto text-center">
-        <p className="text-xl text-indigo-900">
+        <p className="text-xl text-cyan-400">
           © {currentYear} Aleksandar Prpa. All rights reserved.
         </p>
         <div className="mt-4 flex justify-center space-x-6">
           <a
             href="https://www.instagram.com"
-            className="text-indigo-900 hover:text-indigo-700"
+            className="text-cyan-400 hover:text-pink-500"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -21,7 +21,7 @@ function Footer() {
           </a>
           <a
             href="https://www.facebook.com"
-            className="text-indigo-900 hover:text-indigo-700"
+            className="text-cyan-400 hover:text-pink-500"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -29,7 +29,7 @@ function Footer() {
           </a>
           <a
             href="https://www.twitter.com"
-            className="text-indigo-900 hover:text-indigo-700"
+            className="text-cyan-400 hover:text-pink-500"
             target="_blank"
             rel="noopener noreferrer"
           >

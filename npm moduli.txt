@@ -15,13 +15,11 @@ npm i mongodb express cors
 Client
 ------
 Pokretanje:
-npm run dev
+npm run dev -- --host
 ------
 Paketi:
-npm i -D tailwindcss postcss autoprefixer
+npm i -D tailwindcss postcss autoprefixer react-icons react-datepicker date-fns lucide-react
 npm i -D react-router-dom
-npm install react-icons react-datepicker date-fns
-npm install lucide-react
 
 
 localStorage.removeItem("loggedInUser");

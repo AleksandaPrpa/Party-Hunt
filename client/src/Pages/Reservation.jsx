@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Loader from "../UI/Loader";
+import {
+  getPartyById,
+  updatePartyPeopleSignedUp,
+  updatePartyReservation,
+  updatePartyTablesReserved,
+} from "../utils/fetch";
 
 function Reservation() {
   const navigate = useNavigate();
@@ -17,11 +24,7 @@ function Reservation() {
   useEffect(() => {
     async function fetchParty() {
       try {
-        const response = await fetch(`http://localhost:5050/party/${id}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
+        const data = await getPartyById(id);
         setParty(data);
       } catch (error) {
         console.error("Error fetching party:", error);
@@ -44,7 +47,6 @@ function Reservation() {
 
     try {
       const quantity = Number(formData.quantity);
-      //   const isTableParty = party.table_count > 0;
 
       const reservation = [
         ...(party.reservation || []),
@@ -55,54 +57,15 @@ function Reservation() {
           quantity,
         },
       ];
+
       if (party.type === "Club") {
-        const tables_reserved = party.tables_reserved + quantity;
-        const response = await fetch(`http://localhost:5050/party/${id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ tables_reserved }),
-        });
-
-        if (!response.ok) {
-          const text = await response.text();
-          throw new Error(text || "Failed to update party");
-        }
-        const responseData = await response.json();
-        console.log("Updated party:", responseData);
+        await updatePartyTablesReserved(id, party.tables_reserved + quantity);
       } else {
-        const people_signed_up = party.people_signed_up + quantity;
-        const response = await fetch(`http://localhost:5050/party/${id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ people_signed_up }),
-        });
-
-        if (!response.ok) {
-          const text = await response.text();
-          throw new Error(text || "Failed to update party");
-        }
-        const responseData = await response.json();
-        console.log("Updated party:", responseData);
-      }
-      const response = await fetch(`http://localhost:5050/party/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ reservation }),
-      });
-
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(text || "Failed to update party");
+        await updatePartyPeopleSignedUp(id, party.people_signed_up + quantity);
       }
 
-      const responseData = await response.json();
-      console.log("Updated party:", responseData);
+      await updatePartyReservation(id, reservation);
+
       alert("Reservation successful!");
       navigate("/findAParty");
     } catch (error) {
@@ -111,7 +74,7 @@ function Reservation() {
     }
   };
 
-  if (!party) return <p className="text-center mt-10">Loading party...</p>;
+  if (!party) return <Loader />;
 
   const isTableParty = party.table_count !== null && party.table_count > 0;
   const maxQuantity = isTableParty
@@ -121,9 +84,9 @@ function Reservation() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-md mx-auto p-4 shadow-xl rounded-2xl bg-stone-800 space-y-4 mt-10"
+      className="max-w-md mx-auto p-6 shadow-xl shadow-black/30 rounded-2xl bg-slate-900 text-slate-100 space-y-5 mt-10"
     >
-      <h2 className="text-2xl font-bold text-center mb-4">
+      <h2 className="text-2xl font-bold text-center mb-2">
         Reservation for: {party.name}
       </h2>
 
@@ -134,7 +97,7 @@ function Reservation() {
         value={formData.firstName}
         onChange={handleChange}
         required
-        className="w-full p-2 border rounded-lg"
+        className="w-full p-3 rounded-lg bg-slate-800 text-slate-100 border border-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
       />
 
       <input
@@ -144,7 +107,7 @@ function Reservation() {
         value={formData.lastName}
         onChange={handleChange}
         required
-        className="w-full p-2 border rounded-lg"
+        className="w-full p-3 rounded-lg bg-slate-800 text-slate-100 border border-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
       />
 
       <input
@@ -154,10 +117,10 @@ function Reservation() {
         value={formData.phone}
         onChange={handleChange}
         required
-        className="w-full p-2 border rounded-lg"
+        className="w-full p-3 rounded-lg bg-slate-800 text-slate-100 border border-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
       />
 
-      <label className="block font-medium">
+      <label className="block font-medium text-slate-200">
         {isTableParty ? "Number of tables" : "Number of people"}
       </label>
       <input
@@ -168,20 +131,23 @@ function Reservation() {
         value={formData.quantity}
         onChange={handleChange}
         required
-        className="w-full p-2 border rounded-lg"
+        className="w-full p-3 rounded-lg bg-slate-800 text-slate-100 border border-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
       />
-      <p className="text-sm text-gray-400">
+
+      <p className="text-sm text-slate-400">
         Maximum available: {maxQuantity} {isTableParty ? "tables" : "people"}
       </p>
 
       <button
         type="submit"
-        className="block mx-auto cursor-pointer select-none rounded-lg bg-amber-300 py-3 px-6 text-center align-middle font-sans text-lg font-bold uppercase text-stone-700 shadow-md shadow-amber-300/20 transition-all hover:shadow-amber-300/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+        className="w-full cursor-pointer rounded-lg bg-cyan-500 py-3 px-6 text-center font-bold uppercase text-slate-900 shadow-md hover:bg-pink-500 transition-all"
       >
         Submit reservation
       </button>
+
       <button
-        className="block mx-auto cursor-pointer select-none rounded-lg bg-amber-300 py-3 px-6 text-center align-middle font-sans text-lg font-bold uppercase text-stone-700 shadow-md shadow-amber-300/20 transition-all hover:shadow-amber-300/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+        type="button"
+        className="w-full cursor-pointer rounded-lg bg-cyan-500 py-3 px-6 text-center font-bold uppercase text-slate-900 shadow-md hover:bg-pink-500 transition-all"
         onClick={() => navigate(-1)}
       >
         Go back

@@ -6,13 +6,15 @@ import FindAParty from "./Pages/FindAParty";
 import ThrowAParty from "./Pages/ThrowAParty";
 import FindAPartyShowMore from "./Pages/FindAPartyShowMore";
 import Home from "./Pages/Home";
-import logo from "./assets/logo.svg";
+// import logo from "./assets/logo.svg";
 import Reservation from "./Pages/Reservation";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ProfileHostedParty from "./Pages/ProfileHostedParty";
+import Register from "./Pages/Register";
 
 const router = createBrowserRouter([
   {
-    element: <AppLayout logo={logo} />,
+    element: <AppLayout />,
     errorElement: <Error />,
     children: [
       {
@@ -20,10 +22,23 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
+        path: "/profile/register",
+        element: <Register />,
+      },
+      {
         path: "/profile",
         element: (
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        ),
+        errorElement: <Error />,
+      },
+      {
+        path: "/profile/hostedparty/:id",
+        element: (
+          <ProtectedRoute>
+            <ProfileHostedParty />
           </ProtectedRoute>
         ),
         errorElement: <Error />,

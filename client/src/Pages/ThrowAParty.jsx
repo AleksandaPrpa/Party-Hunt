@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import { format } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
-import { createParty } from "../utils/fetch";
+import { createParty, fetchUsers } from "../utils/fetch";
 
 function ThrowAParty() {
   const navigate = useNavigate();
@@ -12,8 +12,8 @@ function ThrowAParty() {
     JSON.parse(sessionStorage.getItem("loggedInUser"));
 
   const [formData, setFormData] = useState({
-    username: loggedInUser.username,
-    user_id: loggedInUser._id,
+    user_name: loggedInUser.username,
+    user_id: "",
     name: "",
     ticket_price: 0,
     currency: "RSD",
@@ -60,16 +60,19 @@ function ThrowAParty() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    const users = await fetchUsers();
+    const user = users.find((u) => u.username === loggedInUser.username);
+    if (!user) throw new Error("User not found");
 
     const dataToSend = {
       ...formData,
+      user_id: user._id,
       reservation: [],
       party_date: formatDateToDDMMYYYY(formData.party_date),
     };
 
     try {
-      const result = await createParty(dataToSend);
-      console.log("Party created:", result);
+      await createParty(dataToSend);
       alert("Party successfully created!");
       navigate("/findAParty");
     } catch (error) {

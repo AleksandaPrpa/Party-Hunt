@@ -34,7 +34,6 @@ function Home() {
 
     try {
       const users = await fetchUsers();
-      console.log("Users:", users);
 
       users.forEach((user) => {
         if (

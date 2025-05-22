@@ -4,7 +4,7 @@ import LinkButton from "../UI/LinkButton";
 import AgeLimitBadge from "../UI/AgeLimitBadge";
 import { dateFormat, useWindowWidth } from "../utils/helpers";
 import Loader from "../UI/Loader";
-import { getPartiesByUser_Id } from "../utils/fetch";
+import { getPartyById } from "../utils/fetch";
 
 function FindAPartyShowMore() {
   const { id } = useParams();
@@ -14,7 +14,7 @@ function FindAPartyShowMore() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const data = await getPartiesByUser_Id(id);
+        const data = await getPartyById(id);
         setParty(data);
       } catch (error) {
         console.error("Error fetching party:", error);
@@ -33,7 +33,9 @@ function FindAPartyShowMore() {
   return (
     <div className="md:grid md:grid-rows-4 md:grid-cols-2 md:gap-4 md:mt-[-5vh] w-full min-h-screen h-auto flex flex-col md:flex-none items-center p-4 text-2xl bg-slate-900 text-slate-100">
       <div className="md:col-span-2 md:row-start-1 md:mb-0 w-full flex justify-start items-center gap-4 mb-4 px-4">
-        <h2 className="text-4xl font-bold text-slate-100">{party.name}</h2>
+        <h2 className="text-4xl w-7/8 font-bold text-slate-100">
+          {party.name}
+        </h2>
         <AgeLimitBadge
           className="flex items-center justify-center w-10 h-10 bg-cyan-500 text-white rounded-full text-sm font-semibold"
           age_limit={party.age_limit}

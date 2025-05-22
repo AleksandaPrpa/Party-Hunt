@@ -42,17 +42,30 @@ export async function createUser(userData) {
 
 //Delete user account by ID
 export async function deleteUserAccount(userId) {
-  const response = await fetch(`http://localhost:5050/users/${userId}`, {
-    method: "DELETE",
-  });
+  try {
+    // 1. Dohvati sve žurke koje je korisnik kreirao
+    const userParties = await getPartiesByUser_Id(userId);
 
-  if (!response.ok) {
-    throw new Error("Failed to delete account");
+    // 2. Obrisi svaku žurku
+    for (const party of userParties) {
+      await deletePartyById(party._id);
+    }
+
+    // 3. Obriši korisnika
+    const response = await fetch(`http://localhost:5050/users/${userId}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to delete account");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Error deleting user and their parties:", error);
+    throw error;
   }
-
-  return response.json();
 }
-
 //Fetch all users
 export async function fetchUsers() {
   const res = await fetch("http://localhost:5050/users");

@@ -1,8 +1,9 @@
+const IPv4 = "192.168.105.139";
 // --- USER-RELATED FUNCTIONS ---
 
 //Fetch user by ID
 export async function getUserById(userId) {
-  const response = await fetch(`http://localhost:5050/users/${userId}`);
+  const response = await fetch(`http://${IPv4}:5050/users/${userId}`);
   if (!response.ok) throw new Error("Failed to fetch user");
   return response.json();
 }
@@ -10,7 +11,7 @@ export async function getUserById(userId) {
 //Check if username or email already exists
 export async function checkDuplicateUser(username, email) {
   try {
-    const response = await fetch("http://localhost:5050/users");
+    const response = await fetch(`http://${IPv4}:5050/users`);
     if (!response.ok) throw new Error("Failed to fetch users");
 
     const users = await response.json();
@@ -27,7 +28,7 @@ export async function checkDuplicateUser(username, email) {
 
 //Create a new user
 export async function createUser(userData) {
-  const response = await fetch("http://localhost:5050/users", {
+  const response = await fetch(`http://${IPv4}:5050/users`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(userData),
@@ -44,12 +45,11 @@ export async function createUser(userData) {
 export async function deleteUserAccount(userId) {
   try {
     const userParties = await getPartiesByUser_Id(userId);
-
     for (const party of userParties) {
       await deletePartyById(party._id);
     }
 
-    const response = await fetch(`http://localhost:5050/users/${userId}`, {
+    const response = await fetch(`http://${IPv4}:5050/users/${userId}`, {
       method: "DELETE",
     });
 
@@ -63,9 +63,10 @@ export async function deleteUserAccount(userId) {
     throw error;
   }
 }
+
 //Fetch all users
 export async function fetchUsers() {
-  const res = await fetch("http://localhost:5050/users");
+  const res = await fetch(`http://${IPv4}:5050/users`);
   if (!res.ok) {
     throw new Error("Failed to fetch users");
   }
@@ -74,7 +75,7 @@ export async function fetchUsers() {
 
 //Update user data by ID
 export async function updateUser(id, updatedData) {
-  const response = await fetch(`http://localhost:5050/users/${id}`, {
+  const response = await fetch(`http://${IPv4}:5050/users/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(updatedData),
@@ -90,7 +91,7 @@ export async function updateUser(id, updatedData) {
 
 //Fetch all parties
 export async function getParties() {
-  const response = await fetch("http://localhost:5050/party");
+  const response = await fetch(`http://${IPv4}:5050/party`);
   if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);
   }
@@ -99,7 +100,7 @@ export async function getParties() {
 
 //Fetch a party by its ID
 export async function getPartyById(id) {
-  const response = await fetch(`http://localhost:5050/party/${id}`);
+  const response = await fetch(`http://${IPv4}:5050/party/${id}`);
   if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);
   }
@@ -109,7 +110,7 @@ export async function getPartyById(id) {
 //Fetch parties created by a specific user
 export async function getPartiesByUser_Id(userId) {
   try {
-    const res = await fetch("http://localhost:5050/party");
+    const res = await fetch(`http://${IPv4}:5050/party`);
     if (!res.ok) throw new Error("Failed to fetch parties");
 
     const allParties = await res.json();
@@ -119,9 +120,10 @@ export async function getPartiesByUser_Id(userId) {
     throw error;
   }
 }
+
 // Update a Party
 export async function updatePartyReservation(id, reservation) {
-  const response = await fetch(`http://localhost:5050/party/${id}`, {
+  const response = await fetch(`http://${IPv4}:5050/party/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ reservation }),
@@ -132,9 +134,10 @@ export async function updatePartyReservation(id, reservation) {
   }
   return response.json();
 }
+
 // Update a Party table
 export async function updatePartyTablesReserved(id, tables_reserved) {
-  const response = await fetch(`http://localhost:5050/party/${id}`, {
+  const response = await fetch(`http://${IPv4}:5050/party/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ tables_reserved }),
@@ -145,9 +148,10 @@ export async function updatePartyTablesReserved(id, tables_reserved) {
   }
   return response.json();
 }
-// Update a Party people singed up
+
+// Update a Party people signed up
 export async function updatePartyPeopleSignedUp(id, people_signed_up) {
-  const response = await fetch(`http://localhost:5050/party/${id}`, {
+  const response = await fetch(`http://${IPv4}:5050/party/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ people_signed_up }),
@@ -158,9 +162,10 @@ export async function updatePartyPeopleSignedUp(id, people_signed_up) {
   }
   return response.json();
 }
+
 // Create a new party
 export async function createParty(data) {
-  const response = await fetch("http://localhost:5050/party", {
+  const response = await fetch(`http://${IPv4}:5050/party`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -175,9 +180,10 @@ export async function createParty(data) {
 
   return response.json();
 }
+
 // Delete a party by id
 export async function deletePartyById(id) {
-  const response = await fetch(`http://localhost:5050/party/${id}`, {
+  const response = await fetch(`http://${IPv4}:5050/party/${id}`, {
     method: "DELETE",
   });
 

@@ -35,6 +35,8 @@ function ThrowAParty() {
     reservation: [],
   });
 
+  const [errors, setErrors] = useState({});
+
   const formatDateToDDMMYYYY = (date) => {
     return format(date, "yyyy-MM-dd");
   };
@@ -45,6 +47,7 @@ function ThrowAParty() {
 
   function handleChange(e) {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]:
@@ -58,8 +61,63 @@ function ThrowAParty() {
     }));
   }
 
+  function validateField(name, value) {
+    let error = "";
+
+    switch (name) {
+      case "name":
+      case "theme":
+        if (!/^[\w\s\d\.\,\!\?]{3,}$/.test(value)) {
+          error = "Must be at least 3 characters.";
+        }
+        break;
+
+      case "location":
+        if (!/^[\w\s\d\.\-\,]{3,}$/.test(value)) {
+          error = "Invalid address format.";
+        }
+        break;
+
+      case "city":
+        if (!/^[A-Za-zčćšđžČĆŠĐŽ\s-]{2,}$/.test(value)) {
+          error = "City must contain only letters.";
+        }
+        break;
+
+      case "phone_number":
+        if (!/^\+?\d{6,15}$/.test(value)) {
+          error = "Enter a valid phone number.";
+        }
+        break;
+
+      case "ticket_price":
+      case "capacity":
+      case "table_count":
+        if (Number(value) < 0) {
+          error = "Value must be 0 or more.";
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    setErrors((prev) => ({ ...prev, [name]: error }));
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
+
+    Object.entries(formData).forEach(([key, value]) =>
+      validateField(key, value)
+    );
+    const hasErrors = Object.values(errors).some((err) => err);
+
+    if (hasErrors) {
+      alert("Please fix the form errors before submitting.");
+      return;
+    }
+
     const users = await fetchUsers();
     const user = users.find((u) => u.username === loggedInUser.username);
     if (!user) throw new Error("User not found");
@@ -89,114 +147,74 @@ function ThrowAParty() {
         onSubmit={handleSubmit}
         className="w-full max-w-lg p-6 bg-slate-800 rounded-2xl shadow-lg space-y-6"
       >
-        <h2 className="text-3xl font-bold text-center  text-slate-100 mb-6">
+        <h2 className="text-3xl font-bold text-center text-slate-100 mb-6">
           Throw A Party
         </h2>
 
+        {[
+          { name: "name", label: "Party Name" },
+          { name: "theme", label: "Theme" },
+          { name: "location", label: "Location (Street/Area)" },
+          { name: "city", label: "City" },
+          { name: "phone_number", label: "Phone Number" },
+          {
+            name: "vip_conditions",
+            label: "VIP Conditions (optional)",
+            required: false,
+          },
+        ].map(({ name, label, required = true }) => (
+          <div key={name}>
+            <label className="text-slate-100 font-medium block mb-1">
+              {label}
+            </label>
+            <input
+              type="text"
+              name={name}
+              value={formData[name]}
+              onChange={handleChange}
+              onBlur={(e) => validateField(name, e.target.value)}
+              required={required}
+              className="w-full p-2 rounded-lg border border-teal-400 bg-slate-800 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            />
+            {errors[name] && (
+              <p className="text-red-500 text-sm mt-1">{errors[name]}</p>
+            )}
+          </div>
+        ))}
+
+        {/* Ticket Price + Currency */}
         <div>
           <label className="text-slate-100 font-medium block mb-1">
-            Party Name
+            Ticket Price
           </label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className="w-full p-2 rounded-lg border border-teal-400 bg-slate-800 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          />
+          <div className="flex">
+            <input
+              type="number"
+              name="ticket_price"
+              value={formData.ticket_price}
+              onChange={handleChange}
+              onBlur={(e) => validateField("ticket_price", e.target.value)}
+              required
+              className="w-6/8 p-2 rounded-lg border mr-4 border-teal-400 bg-slate-800 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            />
+            <select
+              name="currency"
+              value={formData.currency}
+              onChange={handleChange}
+              required
+              className="w-2/8 p-2 rounded-lg border border-teal-400 bg-slate-800 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            >
+              <option value="RSD">RSD</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+            </select>
+          </div>
+          {errors.ticket_price && (
+            <p className="text-red-500 text-sm mt-1">{errors.ticket_price}</p>
+          )}
         </div>
 
-        <label className="text-slate-100 font-medium block mb-1">
-          Ticket Price
-        </label>
-        <div className="flex">
-          <input
-            type="number"
-            name="ticket_price"
-            value={formData.ticket_price}
-            onChange={handleChange}
-            required
-            className="w-6/8 p-2 rounded-lg border mr-4 border-teal-400 bg-slate-800 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          />
-          <select
-            name="currency"
-            value={formData.currency}
-            onChange={handleChange}
-            required
-            className="w-2/8 p-2 rounded-lg border border-teal-400 bg-slate-800 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          >
-            <option value="RSD">RSD</option>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="text-slate-100 font-medium block mb-1">Theme</label>
-          <input
-            type="text"
-            name="theme"
-            value={formData.theme}
-            onChange={handleChange}
-            required
-            className="w-full p-2 rounded-lg border border-teal-400 bg-slate-800 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          />
-        </div>
-
-        <div>
-          <label className="text-slate-100 font-medium block mb-1">
-            Location (Street/Area)
-          </label>
-          <input
-            type="text"
-            name="location"
-            value={formData.location}
-            onChange={handleChange}
-            required
-            className="w-full p-2 rounded-lg border border-teal-400 bg-slate-800 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          />
-        </div>
-
-        <div>
-          <label className="text-slate-100 font-medium block mb-1">City</label>
-          <input
-            type="text"
-            name="city"
-            value={formData.city}
-            onChange={handleChange}
-            required
-            className="w-full p-2 rounded-lg border border-teal-400 bg-slate-800 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          />
-        </div>
-
-        <div>
-          <label className="text-slate-100 font-medium block mb-1">
-            Phone Number
-          </label>
-          <input
-            type="text"
-            name="phone_number"
-            value={formData.phone_number}
-            onChange={handleChange}
-            required
-            className="w-full p-2 rounded-lg border border-teal-400 bg-slate-800 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          />
-        </div>
-
-        <div>
-          <label className="text-slate-100 font-medium block mb-1">
-            VIP Conditions (optional)
-          </label>
-          <input
-            type="text"
-            name="vip_conditions"
-            value={formData.vip_conditions}
-            onChange={handleChange}
-            className="w-full p-2 rounded-lg border border-teal-400 bg-slate-800 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-          />
-        </div>
-
+        {/* Age Limit */}
         <div>
           <label className="text-slate-100 font-medium block mb-1">
             Age Limit
@@ -214,6 +232,7 @@ function ThrowAParty() {
           </select>
         </div>
 
+        {/* Party Type */}
         <div>
           <label className="text-slate-100 font-medium block mb-1">
             Party Type
@@ -232,6 +251,7 @@ function ThrowAParty() {
           </select>
         </div>
 
+        {/* Club-only or other type */}
         {isClub ? (
           <div>
             <label className="text-slate-100 font-medium block mb-1">
@@ -242,9 +262,13 @@ function ThrowAParty() {
               name="table_count"
               value={formData.table_count}
               onChange={handleChange}
+              onBlur={(e) => validateField("table_count", e.target.value)}
               required
               className="w-full p-2 rounded-lg border border-teal-400 bg-slate-800 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
+            {errors.table_count && (
+              <p className="text-red-500 text-sm mt-1">{errors.table_count}</p>
+            )}
           </div>
         ) : (
           <div>
@@ -256,12 +280,17 @@ function ThrowAParty() {
               name="capacity"
               value={formData.capacity}
               onChange={handleChange}
+              onBlur={(e) => validateField("capacity", e.target.value)}
               required
               className="w-full p-2 rounded-lg border border-teal-400 bg-slate-800 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
+            {errors.capacity && (
+              <p className="text-red-500 text-sm mt-1">{errors.capacity}</p>
+            )}
           </div>
         )}
 
+        {/* Time */}
         <div>
           <label className="text-slate-100 font-medium block mb-1">
             Start Time
@@ -272,7 +301,7 @@ function ThrowAParty() {
             value={formData.start_time}
             onChange={handleChange}
             required
-            className="w-full p-2 rounded-lg border border-teal-400 bg-slate-800 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            className="w-full p-2 rounded-lg border border-teal-400 bg-slate-800 text-slate-100"
           />
         </div>
 
@@ -286,10 +315,11 @@ function ThrowAParty() {
             value={formData.end_time}
             onChange={handleChange}
             required
-            className="w-full p-2 rounded-lg border border-teal-400 bg-slate-800 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            className="w-full p-2 rounded-lg border border-teal-400 bg-slate-800 text-slate-100"
           />
         </div>
 
+        {/* Date */}
         <div>
           <label className="block text-sm font-medium text-slate-100 mb-1">
             Party Date
@@ -299,24 +329,16 @@ function ThrowAParty() {
             onChange={handleDateChange}
             dateFormat="dd/MM/yyyy"
             placeholderText="Select party date"
-            className=" w-full p-3 rounded-lg border border-teal-400 bg-slate-800 text-slate-100 text-base focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm placeholder:text-slate-400"
-            calendarClassName="custom-datepicker bg-slate-900 text-slate-100 rounded-lg shadow-lg border border-teal-400"
-            popperPlacement="bottom-start"
-            popperModifiers={[
-              {
-                name: "offset",
-                options: {
-                  offset: [0, 10],
-                },
-              },
-            ]}
+            className="w-full p-3 rounded-lg border border-teal-400 bg-slate-800 text-slate-100"
+            calendarClassName="custom-datepicker bg-slate-900 text-slate-100"
             withPortal
           />
         </div>
 
+        {/* Buttons */}
         <button
           type="submit"
-          className="w-full bg-cyan-500 text-slate-100 cursor-pointer font-bold py-3 rounded-lg shadow-md hover:bg-pink-500 transition"
+          className="w-full bg-cyan-500 text-slate-100 font-bold py-3 cursor-pointer rounded-lg shadow-md hover:bg-pink-500 transition"
         >
           Create Party
         </button>
@@ -324,7 +346,7 @@ function ThrowAParty() {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="w-full bg-cyan-500 text-slate-100 cursor-pointer font-bold py-3 rounded-lg shadow-md hover:bg-pink-500 transition"
+          className="w-full bg-cyan-500 text-slate-100 font-bold py-3 cursor-pointer rounded-lg shadow-md hover:bg-pink-500 transition"
         >
           Go back
         </button>
